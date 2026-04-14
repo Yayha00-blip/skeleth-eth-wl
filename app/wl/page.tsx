@@ -92,8 +92,9 @@ export default function WL() {
       <audio ref={ambientRef} src="/sound/ambient.mp3" preload="auto" loop />
 
       <div className="overlay" />
-      <div className="glow glowA" />
-      <div className="glow glowB" />
+      <div className="heroGlow heroGlowA" />
+      <div className="heroGlow heroGlowB" />
+      <div className="grain" />
 
       {needsSoundUnlock && (
         <button
@@ -238,6 +239,7 @@ export default function WL() {
           background-size: cover;
           background-position: center;
           overflow-x: hidden;
+          background-color: #05070d;
         }
 
         .overlay {
@@ -246,51 +248,89 @@ export default function WL() {
           background:
             linear-gradient(
               to bottom,
-              rgba(0, 0, 0, 0.35),
-              rgba(0, 0, 0, 0.72)
+              rgba(5, 7, 13, 0.24),
+              rgba(5, 7, 13, 0.78)
             ),
             radial-gradient(
               circle at center,
-              rgba(0, 204, 255, 0.09),
-              rgba(0, 0, 0, 0.72)
+              rgba(64, 194, 255, 0.12),
+              rgba(0, 0, 0, 0.7)
             );
           z-index: 0;
           pointer-events: none;
         }
 
-        .glow {
+        .heroGlow {
           position: fixed;
           border-radius: 999px;
-          filter: blur(80px);
-          opacity: 0.18;
+          filter: blur(90px);
           z-index: 0;
           pointer-events: none;
-          animation: drift 7s ease-in-out infinite alternate;
+          opacity: 0.18;
         }
 
-        .glowA {
-          width: 280px;
-          height: 280px;
-          left: 8%;
-          top: 12%;
-          background: rgba(0, 204, 255, 0.25);
+        .heroGlowA {
+          width: 340px;
+          height: 340px;
+          top: 10%;
+          left: 10%;
+          background: rgba(75, 145, 255, 0.3);
+          animation: driftA 8s ease-in-out infinite alternate;
         }
 
-        .glowB {
-          width: 240px;
-          height: 240px;
-          right: 10%;
-          bottom: 10%;
-          background: rgba(168, 85, 247, 0.2);
-          animation-duration: 9s;
+        .heroGlowB {
+          width: 300px;
+          height: 300px;
+          right: 8%;
+          bottom: 8%;
+          background: rgba(173, 83, 255, 0.24);
+          animation: driftB 9s ease-in-out infinite alternate;
         }
 
-        @keyframes drift {
+        .grain {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+          opacity: 0.07;
+          background-image: radial-gradient(#ffffff 0.45px, transparent 0.45px);
+          background-size: 12px 12px;
+          animation: grainMove 10s linear infinite;
+        }
+
+        @keyframes driftA {
           from {
             transform: translate3d(0, 0, 0) scale(1);
           }
           to {
-            transform: translate3d(25px, -18px, 0) scale(1.12);
+            transform: translate3d(24px, -18px, 0) scale(1.14);
+          }
+        }
+
+        @keyframes driftB {
+          from {
+            transform: translate3d(0, 0, 0) scale(1);
+          }
+          to {
+            transform: translate3d(-22px, 16px, 0) scale(1.12);
+          }
+        }
+
+        @keyframes grainMove {
+          0% {
+            transform: translate(0, 0);
+          }
+          25% {
+            transform: translate(6px, -4px);
+          }
+          50% {
+            transform: translate(-4px, 5px);
+          }
+          75% {
+            transform: translate(4px, 3px);
+          }
+          100% {
+            transform: translate(0, 0);
           }
         }
 
@@ -326,28 +366,34 @@ export default function WL() {
         }
 
         .eyebrow {
-          font-size: 12px;
-          letter-spacing: 5px;
-          opacity: 0.72;
+          font-size: 13px;
+          letter-spacing: 6px;
+          opacity: 0.8;
           margin-bottom: 18px;
+          color: rgba(226, 242, 255, 0.82);
+          text-shadow: 0 0 12px rgba(101, 214, 255, 0.18);
+          animation: heroFloat 4.8s ease-in-out infinite;
         }
 
         .title {
           margin: 0;
-          font-size: clamp(48px, 10vw, 92px);
-          letter-spacing: 10px;
+          font-size: clamp(50px, 10vw, 96px);
+          letter-spacing: 12px;
           color: #ffffff;
           text-shadow:
-            0 0 14px rgba(0, 204, 255, 0.65),
-            0 0 32px rgba(0, 204, 255, 0.2);
+            0 0 12px rgba(108, 210, 255, 0.45),
+            0 0 30px rgba(78, 155, 255, 0.18);
+          animation: titlePulse 4s ease-in-out infinite;
         }
 
         .desc {
           max-width: 760px;
-          margin: 24px auto 0;
-          font-size: 18px;
-          line-height: 1.95;
-          color: rgba(233, 247, 255, 0.84);
+          margin: 26px auto 0;
+          font-size: 19px;
+          line-height: 2;
+          color: rgba(236, 245, 255, 0.88);
+          text-shadow: 0 0 18px rgba(112, 199, 255, 0.08);
+          animation: heroFloat 5.5s ease-in-out infinite;
         }
 
         .supplyBox {
@@ -357,21 +403,26 @@ export default function WL() {
           flex-direction: column;
           gap: 8px;
           padding: 18px 24px;
-          border: 1px solid rgba(0, 204, 255, 0.28);
-          background: rgba(0, 0, 0, 0.42);
-          box-shadow: 0 0 20px rgba(0, 204, 255, 0.16);
+          border: 1px solid rgba(95, 183, 255, 0.34);
+          background: rgba(10, 14, 22, 0.42);
+          box-shadow:
+            0 0 18px rgba(93, 203, 255, 0.18),
+            inset 0 0 12px rgba(145, 209, 255, 0.05);
+          animation: heroFloat 6.4s ease-in-out infinite;
         }
 
         .supplyLabel {
           font-size: 11px;
           letter-spacing: 3px;
-          opacity: 0.64;
+          opacity: 0.72;
+          color: rgba(232, 246, 255, 0.82);
         }
 
         .supplyValue {
-          font-size: 32px;
+          font-size: 34px;
           letter-spacing: 4px;
           color: #ffffff;
+          text-shadow: 0 0 12px rgba(90, 203, 255, 0.24);
         }
 
         .enterBtn {
@@ -380,27 +431,51 @@ export default function WL() {
           align-items: center;
           gap: 10px;
           padding: 15px 24px;
-          border: 1px solid rgba(0, 204, 255, 0.42);
+          border: 1px solid rgba(98, 194, 255, 0.4);
           background: linear-gradient(
             90deg,
-            rgba(0, 204, 255, 0.9),
-            rgba(67, 182, 255, 0.95)
+            rgba(38, 174, 255, 0.95),
+            rgba(104, 202, 255, 0.95)
           );
-          color: #031019;
+          color: #061018;
           cursor: pointer;
           font-size: 12px;
           letter-spacing: 2px;
-          box-shadow: 0 0 24px rgba(0, 204, 255, 0.24);
+          box-shadow: 0 0 24px rgba(0, 204, 255, 0.22);
           transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
 
         .enterBtn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 0 32px rgba(0, 204, 255, 0.32);
+          box-shadow: 0 0 30px rgba(0, 204, 255, 0.34);
         }
 
         .arrow {
           font-size: 16px;
+        }
+
+        @keyframes heroFloat {
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+
+        @keyframes titlePulse {
+          0% {
+            transform: translateY(0) scale(1);
+          }
+          50% {
+            transform: translateY(-4px) scale(1.01);
+          }
+          100% {
+            transform: translateY(0) scale(1);
+          }
         }
 
         .content {
@@ -561,12 +636,12 @@ export default function WL() {
 
         .submitBtn {
           margin-top: 8px;
-          padding: 16px;
+          padding: 18px;
           background: linear-gradient(
             90deg,
             #00ccff,
-            #45d0ff 45%,
-            #89e3ff
+            #47d1ff 45%,
+            #a6eeff
           );
           color: #031019;
           border: none;
@@ -574,12 +649,15 @@ export default function WL() {
           font-size: 13px;
           letter-spacing: 2px;
           box-shadow: 0 0 26px rgba(0, 204, 255, 0.22);
-          transition: transform 0.22s ease, box-shadow 0.22s ease;
+          transition: transform 0.22s ease, box-shadow 0.22s ease,
+            filter 0.22s ease;
+          text-transform: uppercase;
         }
 
         .submitBtn:hover {
           transform: translateY(-2px) scale(1.01);
-          box-shadow: 0 0 34px rgba(0, 204, 255, 0.32);
+          box-shadow: 0 0 34px rgba(0, 204, 255, 0.34);
+          filter: brightness(1.04);
         }
 
         .okMsg,
@@ -627,6 +705,12 @@ export default function WL() {
 
           .taskName {
             font-size: 17px;
+          }
+
+          .soundUnlock {
+            top: 12px;
+            right: 12px;
+            font-size: 10px;
           }
         }
       `}</style>
