@@ -1,34 +1,28 @@
-﻿import mongoose from "mongoose";
+﻿import { MongoClient } from "mongodb";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
+const uri = process.env.MONGODB_URI as string;
 
-type MongooseCache = {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-};
+if (!uri) {
+  throw new Error("❌ MONGODB_URI is missing");
+}
+
+const options = {};
+
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
 
 declare global {
-  var mongooseCache: MongooseCache | undefined;
+  var _mongoClientPromise: Promise<MongoClient>;
 }
 
-const cached: MongooseCache = global.mongooseCache || {
-  conn: null,
-  promise: null,
-};
-
-if (!global.mongooseCache) {
-  global.mongooseCache = cached;
+if (!global._mongoClientPromise) {
+  client = new MongoClient(uri, options);
+  global._mongoClientPromise = client.connect();
 }
+
+clientPromise = global._mongoClientPromise;
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      dbName: "skeleth",
-    });
-  }
-
-  cached.conn = await cached.promise;
-  return cached.conn;
+  const client = await clientPromise;
+  return client.db("skeleth");
 }

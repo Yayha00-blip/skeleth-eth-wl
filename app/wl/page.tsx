@@ -614,6 +614,78 @@ export default function WL() {
             flex-direction: column;
           }
         }
+/* 🔥 POLISH EFFECTS */
+
+/* TITLE GLOW + GLITCH */
+.title {
+  animation: glitch 2s infinite;
+  text-shadow:
+    4px 4px 0 #ff2d8f,
+    -4px -4px 0 #00e5ff,
+    0 0 20px rgba(255,255,255,0.1);
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, 1px); }
+  80% { transform: translate(1px, -1px); }
+  100% { transform: translate(0); }
+}
+
+/* BUTTONS */
+.yellowBtn {
+  transition: all 0.2s ease;
+}
+
+.yellowBtn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 8px 8px 0 #ff2d8f, 0 0 20px rgba(255,230,0,0.4);
+}
+
+.cyanBtn {
+  transition: all 0.2s ease;
+}
+
+.cyanBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 15px #00e5ff;
+}
+
+/* NAV BUTTON */
+.joinTop:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #ff4fa1;
+}
+
+/* TASK CARDS */
+.task {
+  transition: all 0.2s ease;
+}
+
+.task:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 20px rgba(0,204,255,0.2);
+}
+
+/* INPUT */
+input:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0,204,255,0.3);
+}
+
+/* SUBMIT BUTTON */
+.submitBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 8px 8px 0 #ff2d8f, 0 0 15px rgba(255,230,0,0.3);
+}
+
+/* BADGE GLOW */
+.badge {
+  box-shadow: 0 0 15px rgba(255,230,0,0.2);
+}
+
       `}</style>
     </main>
   );
