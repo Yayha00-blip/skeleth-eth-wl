@@ -63,12 +63,7 @@ export default function WL() {
       <header className="nav">
         <div className={`logo ${orbitron.className}`}>SKELETH</div>
 
-        <nav className="links">
-          <a href="#lore">LORE</a>
-          <a href="#signals">GALLERY</a>
-          <a href="#signals">TRAITS</a>
-          <a href="#signals">ROADMAP</a>
-        </nav>
+
 
         <button
           className={`joinTop ${orbitron.className}`}
