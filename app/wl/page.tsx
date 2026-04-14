@@ -70,7 +70,10 @@ export default function WL() {
           <a href="#signals">ROADMAP</a>
         </nav>
 
-        <button className={`joinTop ${orbitron.className}`} onClick={scrollToSignals}>
+        <button
+          className={`joinTop ${orbitron.className}`}
+          onClick={scrollToSignals}
+        >
           JOIN WL
         </button>
       </header>
@@ -91,7 +94,10 @@ export default function WL() {
         </p>
 
         <div className="heroButtons">
-          <button className={`yellowBtn ${orbitron.className}`} onClick={scrollToSignals}>
+          <button
+            className={`yellowBtn ${orbitron.className}`}
+            onClick={scrollToSignals}
+          >
             JOIN WHITELIST →
           </button>
 
@@ -108,10 +114,12 @@ export default function WL() {
 
       <section className="signalsSection" id="signals">
         <div className="signalsCard">
-          <h2 className={`signalsTitle ${orbitron.className}`}>SIGNALS</h2>
-          <p className="signalsSub">
-            Complete the sequence, then submit your identity and proof.
-          </p>
+          <div className="cardHead">
+            <h2 className={`signalsTitle ${orbitron.className}`}>SIGNALS</h2>
+            <p className="signalsSub">
+              Complete the sequence, then submit your identity and proof.
+            </p>
+          </div>
 
           <div className="taskGrid">
             <a
@@ -182,36 +190,52 @@ export default function WL() {
               onChange={(e) => setWallet(e.target.value)}
             />
 
-            <label className="fieldLabel">PROOF LINK</label>
+            <label className="fieldLabel">PROOF TAG</label>
             <input
               placeholder="https://x.com/.../status/..."
               value={proof}
               onChange={(e) => setProof(e.target.value)}
             />
 
-            <button className={`submitBtn ${orbitron.className}`} onClick={submitEntry}>
+            <button
+              className={`submitBtn ${orbitron.className}`}
+              onClick={submitEntry}
+            >
               SUBMIT YOUR ENTRY
             </button>
 
             {msg && (
-              <p className={isError ? "errorMsg" : "okMsg"}>
-                {msg}
-              </p>
+              <p className={isError ? "errorMsg" : "okMsg"}>{msg}</p>
             )}
           </div>
         </div>
       </section>
 
       <style jsx>{`
+        :global(html, body) {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          min-height: 100%;
+          overflow-x: hidden;
+          background: #05050b;
+        }
+
+        :global(*) {
+          box-sizing: border-box;
+        }
+
         .page {
-          min-height: 100vh;
+          min-height: 100svh;
+          width: 100%;
           position: relative;
           background-size: cover;
-          background-position: center;
+          background-position: center center;
           background-repeat: no-repeat;
           background-color: #05050b;
           color: white;
           overflow-x: hidden;
+          isolation: isolate;
         }
 
         .overlay {
@@ -227,16 +251,21 @@ export default function WL() {
         .noise {
           position: fixed;
           inset: 0;
-          background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+          background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
           background-size: 100% 3px;
           opacity: 0.06;
           pointer-events: none;
           z-index: 0;
         }
 
-        .nav {
+        .nav,
+        .hero,
+        .signalsSection {
           position: relative;
           z-index: 2;
+        }
+
+        .nav {
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -279,9 +308,7 @@ export default function WL() {
         }
 
         .hero {
-          position: relative;
-          z-index: 2;
-          min-height: calc(100vh - 72px);
+          min-height: calc(100svh - 72px);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -379,8 +406,6 @@ export default function WL() {
         }
 
         .signalsSection {
-          position: relative;
-          z-index: 2;
           padding: 40px 20px 90px;
           display: flex;
           justify-content: center;
@@ -430,8 +455,8 @@ export default function WL() {
           padding: 18px;
           text-decoration: none;
           color: white;
-          border: 2px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.04);
+          border: 2px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.04);
           transition: transform 0.18s ease, box-shadow 0.18s ease;
         }
 
@@ -490,7 +515,7 @@ export default function WL() {
           margin-top: 4px;
           font-size: 12px;
           letter-spacing: 2px;
-          color: rgba(255,255,255,0.78);
+          color: rgba(255, 255, 255, 0.78);
         }
 
         input {
@@ -542,7 +567,8 @@ export default function WL() {
         }
 
         @keyframes titleGlitch {
-          0%, 100% {
+          0%,
+          100% {
             transform: translate(0, 0);
           }
           20% {
@@ -561,7 +587,7 @@ export default function WL() {
 
         @media (max-width: 820px) {
           .nav {
-            padding: 16px 16px;
+            padding: 16px;
             gap: 12px;
           }
 
