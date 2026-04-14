@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Press_Start_2P } from "next/font/google";
 
 const arcade = Press_Start_2P({
@@ -15,12 +15,16 @@ export default function WL() {
   const [msg, setMsg] = useState("");
   const [isError, setIsError] = useState(false);
 
+  // 🔊 AUDIO REF (REAL FIX)
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   async function send() {
     try {
-      // 🔊 SOUND FIX
-      const a = new Audio("/sound/hover.mp3");
-      a.volume = 0.4;
-      a.play().catch(() => {});
+      // 🔊 PLAY SOUND (WORKING)
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      }
 
       const r = await fetch("/api/wl", {
         method: "POST",
@@ -56,6 +60,9 @@ export default function WL() {
         backgroundImage: "url('/bg/skeleth.png')",
       }}
     >
+      {/* 🔊 AUDIO ELEMENT */}
+      <audio ref={audioRef} src="/sound/hover.mp3" preload="auto" />
+
       <div className="overlay" />
 
       {/* HERO */}
@@ -107,18 +114,9 @@ export default function WL() {
           </a>
         </div>
 
-        <input
-          placeholder="@twitter"
-          onChange={(e) => setT(e.target.value)}
-        />
-        <input
-          placeholder="0x wallet"
-          onChange={(e) => setW(e.target.value)}
-        />
-        <input
-          placeholder="proof link"
-          onChange={(e) => setP(e.target.value)}
-        />
+        <input placeholder="@twitter" onChange={(e) => setT(e.target.value)} />
+        <input placeholder="0x wallet" onChange={(e) => setW(e.target.value)} />
+        <input placeholder="proof link" onChange={(e) => setP(e.target.value)} />
 
         <button onClick={send}>SUBMIT</button>
 
@@ -143,7 +141,6 @@ export default function WL() {
           pointer-events: none;
         }
 
-        /* HERO */
         .hero {
           height: 100vh;
           display: flex;
@@ -169,7 +166,6 @@ export default function WL() {
           opacity: 0.9;
         }
 
-        /* ✨ ANIMATION */
         .animated {
           animation: float 4s ease-in-out infinite;
           text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
@@ -195,7 +191,6 @@ export default function WL() {
           border: none;
         }
 
-        /* CARD */
         .card {
           padding: 40px;
           max-width: 600px;
