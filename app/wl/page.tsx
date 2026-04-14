@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Press_Start_2P } from "next/font/google";
 
 const arcade = Press_Start_2P({
@@ -15,51 +15,38 @@ export default function WL() {
   const [msg, setMsg] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
-
-  useEffect(() => {
-    const a = new Audio("/sound/hover.mp3");
-    a.volume = 0.3;
-    setAudio(a);
-
-    window.addEventListener("mousemove", (e) => {
-      setX(e.clientX);
-      setY(e.clientY);
-    });
-  }, []);
-
-  function play() {
-    if (audio) {
-      audio.currentTime = 0;
-      audio.play();
-    }
-  }
-
   async function send() {
-    const r = await fetch("/api/wl", {
-      method: "POST",
-      body: JSON.stringify({ twitter: t, wallet: w, proof: p }),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      // 🔊 SOUND FIX
+      const a = new Audio("/sound/hover.mp3");
+      a.volume = 0.4;
+      a.play().catch(() => {});
 
-    const d = await r.json();
+      const r = await fetch("/api/wl", {
+        method: "POST",
+        body: JSON.stringify({ twitter: t, wallet: w, proof: p }),
+        headers: { "Content-Type": "application/json" },
+      });
 
-    if (d.ok) {
-      setMsg("ACCESS GRANTED");
-      setIsError(false);
-    } else {
-      setMsg(d.error || "ERROR");
+      const d = await r.json();
+
+      if (d.ok) {
+        setMsg("ACCESS GRANTED");
+        setIsError(false);
+      } else {
+        setMsg("Invalid proof link.");
+        setIsError(true);
+      }
+    } catch {
+      setMsg("ERROR");
       setIsError(true);
     }
   }
 
   function scroll() {
-    document
-      .getElementById("tasks")
-      ?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("tasks")?.scrollIntoView({
+      behavior: "smooth",
+    });
   }
 
   return (
@@ -71,28 +58,17 @@ export default function WL() {
     >
       <div className="overlay" />
 
-      {/* mouse effect */}
-      <div
-        className="cursor"
-        style={{ left: x, top: y }}
-      />
-      <div
-        className="skull"
-        style={{ left: x, top: y }}
-      >
-        ☠
-      </div>
-
       {/* HERO */}
       <div className="hero">
-        <h1
-          className={`title glitch ${arcade.className}`}
-          data-text="SKELETH"
-        >
-          SKELETH
-        </h1>
+        <h1 className={`title ${arcade.className}`}>SKELETH</h1>
 
-        <p>RITUAL ACCESS ONLY</p>
+        <p className="desc animated">
+          Skeleth are lost souls reborn on Ethereum, drifting between a fading
+          past and a neon future. Their bones hold forgotten memories… and the
+          chain never lets them die.
+        </p>
+
+        <div className="supply">TOTAL SUPPLY — 2222</div>
 
         <button onClick={scroll}>ENTER ↓</button>
       </div>
@@ -102,19 +78,13 @@ export default function WL() {
         <h2 className={arcade.className}>SIGNALS</h2>
 
         <div className="grid">
-          <a
-            href="https://x.com/SkelethNFT"
-            target="_blank"
-            onMouseEnter={play}
-            className="task"
-          >
+          <a href="https://x.com/SkelethNFT" target="_blank" className="task">
             ↗ FOLLOW
           </a>
 
           <a
             href="https://x.com/SkelethNFT/status/2043767748539429086"
             target="_blank"
-            onMouseEnter={play}
             className="task purple"
           >
             ↗ LIKE
@@ -123,7 +93,6 @@ export default function WL() {
           <a
             href="https://twitter.com/intent/retweet?tweet_id=2043767748539429086"
             target="_blank"
-            onMouseEnter={play}
             className="task green"
           >
             ↗ RETWEET
@@ -132,7 +101,6 @@ export default function WL() {
           <a
             href="https://x.com/SkelethNFT/status/2043767748539429086"
             target="_blank"
-            onMouseEnter={play}
             className="task orange"
           >
             ↗ TAG 2
@@ -165,35 +133,17 @@ export default function WL() {
           background-size: cover;
           background-position: center;
           color: white;
-          cursor: none;
+          position: relative;
         }
 
         .overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0,0,0,0.7);
-        }
-
-        /* mouse */
-        .cursor {
-          position: fixed;
-          width: 120px;
-          height: 120px;
-          background: radial-gradient(
-            circle,
-            rgba(0,255,255,0.3),
-            transparent
-          );
-          transform: translate(-50%, -50%);
-        }
-
-        .skull {
-          position: fixed;
-          transform: translate(-50%, -50%);
+          background: rgba(0, 0, 0, 0.65);
           pointer-events: none;
         }
 
-        /* hero */
+        /* HERO */
         .hero {
           height: 100vh;
           display: flex;
@@ -201,6 +151,10 @@ export default function WL() {
           align-items: center;
           justify-content: center;
           gap: 20px;
+          text-align: center;
+          padding: 20px;
+          z-index: 1;
+          position: relative;
         }
 
         .title {
@@ -208,19 +162,47 @@ export default function WL() {
           text-shadow: 0 0 20px cyan;
         }
 
+        .desc {
+          max-width: 700px;
+          line-height: 1.9;
+          font-size: 16px;
+          opacity: 0.9;
+        }
+
+        /* ✨ ANIMATION */
+        .animated {
+          animation: float 4s ease-in-out infinite;
+          text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        @keyframes float {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+          100% { transform: translateY(0); }
+        }
+
+        .supply {
+          font-size: 14px;
+          letter-spacing: 3px;
+          opacity: 0.7;
+        }
+
         button {
-          padding: 10px 20px;
+          padding: 12px 24px;
           background: cyan;
           color: black;
           cursor: pointer;
+          border: none;
         }
 
-        /* card */
+        /* CARD */
         .card {
           padding: 40px;
           max-width: 600px;
           margin: auto;
-          background: rgba(0,0,0,0.8);
+          background: rgba(0, 0, 0, 0.9);
+          position: relative;
+          z-index: 2;
         }
 
         .grid {
@@ -232,7 +214,12 @@ export default function WL() {
 
         .task {
           border: 1px solid cyan;
-          padding: 10px;
+          padding: 12px;
+          transition: 0.2s;
+        }
+
+        .task:hover {
+          background: rgba(0, 255, 255, 0.1);
         }
 
         .purple { border-color: violet; }
@@ -248,30 +235,14 @@ export default function WL() {
           color: cyan;
         }
 
-        .error { color: red; }
-        .ok { color: lime; }
-
-        /* glitch */
-        .glitch::before,
-        .glitch::after {
-          content: attr(data-text);
-          position: absolute;
-        }
-
-        .glitch::before {
-          color: cyan;
-          animation: g 1s infinite;
-        }
-
-        .glitch::after {
+        .error {
           color: red;
-          animation: g 1s infinite reverse;
+          margin-top: 10px;
         }
 
-        @keyframes g {
-          0% { transform: translate(0); }
-          50% { transform: translate(2px, -2px); }
-          100% { transform: translate(0); }
+        .ok {
+          color: lime;
+          margin-top: 10px;
         }
       `}</style>
     </div>
